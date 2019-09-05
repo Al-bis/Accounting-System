@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-public class InvoiceEntry {
+public final class InvoiceEntry {
 
-    private Long id;
-    private String title;
-    private BigDecimal value;
-    private Vat vat;
+    private final Long id;
+    private final String title;
+    private final BigDecimal value;
+    private final Vat vat;
 
-    public InvoiceEntry(Long id, String title, BigDecimal value, Vat vat) {
+    private InvoiceEntry(Long id, String title, BigDecimal value, Vat vat) {
         if (id < 1) {
             throw new IllegalArgumentException("Given ID cannot be lower then 1");
         }
@@ -28,32 +28,16 @@ public class InvoiceEntry {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
-
     public Vat getVat() {
         return vat;
-    }
-
-    public void setVat(Vat vat) {
-        this.vat = vat;
     }
 
     public BigDecimal getValueAfterTax() {
@@ -89,5 +73,53 @@ public class InvoiceEntry {
             + ", value=" + value
             + ", vat=" + vat
             + '}';
+    }
+
+    public static InvoiceEntryBuilder builder() {
+        return new InvoiceEntryBuilder();
+    }
+
+    public static class InvoiceEntryBuilder {
+
+        private Long id;
+        private String title;
+        private BigDecimal value;
+        private Vat vat;
+
+        public InvoiceEntryBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public InvoiceEntryBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public InvoiceEntryBuilder value(BigDecimal value) {
+            this.value = value;
+            return this;
+        }
+
+        public InvoiceEntryBuilder vat(Vat vat) {
+            this.vat = vat;
+            return this;
+        }
+
+        public InvoiceEntry build() {
+            if (id == null) {
+                throw new IllegalArgumentException("Id cannot be null");
+            }
+            if (title == null) {
+                throw new IllegalArgumentException("Title cannot be null");
+            }
+            if (value == null) {
+                throw new IllegalArgumentException("Value cannot be null");
+            }
+            if (vat == null) {
+                throw new IllegalArgumentException("Vat cannot be null");
+            }
+            return new InvoiceEntry(id, title, value, vat);
+        }
     }
 }

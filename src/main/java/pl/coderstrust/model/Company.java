@@ -2,12 +2,12 @@ package pl.coderstrust.model;
 
 import java.util.Objects;
 
-public class Company {
+public final class Company {
 
-    private String name;
-    private String taxIdentificationNumber;
+    private final String name;
+    private final String taxIdentificationNumber;
 
-    public Company(String name, String taxIdentificationNumber) {
+    private Company(String name, String taxIdentificationNumber) {
         this.name = name;
         this.taxIdentificationNumber = taxIdentificationNumber;
     }
@@ -16,16 +16,8 @@ public class Company {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTaxIdentificationNumber() {
         return taxIdentificationNumber;
-    }
-
-    public void setTaxIdentificationNumber(String taxIdentificationNumber) {
-        this.taxIdentificationNumber = taxIdentificationNumber;
     }
 
     @Override
@@ -52,5 +44,35 @@ public class Company {
             + "name='" + name + '\''
             + ", taxIdentificationNumber='" + taxIdentificationNumber + '\''
             + '}';
+    }
+
+    public static CompanyBuilder builder() {
+        return new CompanyBuilder();
+    }
+
+    public static class CompanyBuilder {
+
+        private String name;
+        private String taxIdentificationNumber;
+
+        public CompanyBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public CompanyBuilder taxIdentificationNumber(String taxIdentificationNumber) {
+            this.taxIdentificationNumber = taxIdentificationNumber;
+            return this;
+        }
+
+        public Company build() {
+            if (name == null) {
+                throw new IllegalArgumentException("Name cannot be null");
+            }
+            if (taxIdentificationNumber == null) {
+                throw new IllegalArgumentException("Tax ID number cannot be null");
+            }
+            return new Company(name, taxIdentificationNumber);
+        }
     }
 }
