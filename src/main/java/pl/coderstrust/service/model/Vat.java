@@ -1,4 +1,4 @@
-package pl.coderstrust.model;
+package pl.coderstrust.service.model;
 
 import java.math.BigDecimal;
 

@@ -1,17 +1,16 @@
 package pl.coderstrust.persistatnce;
 
-import pl.coderstrust.exception.InvoiceAlreadyExistException;
-import pl.coderstrust.exception.InvoiceNotFoundException;
-import pl.coderstrust.model.Invoice;
+import pl.coderstrust.service.exception.InvoiceNotFoundException;
+import pl.coderstrust.service.model.Invoice;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryDatabase implements InvoiceRepository {
 
-    private Map<Long, Invoice> invoices = new HashMap<>();
+    private Map<Long, Invoice> invoices = new ConcurrentHashMap<>();
 
     @Override
     public Collection<Invoice> getAllInvoices() {
@@ -25,10 +24,7 @@ public class InMemoryDatabase implements InvoiceRepository {
         }
         Invoice invoiceCopy = new Invoice(invoice);
         if (invoices.containsKey(invoice.getId())) {
-            if (invoices.containsValue(invoice)) {
-                throw new InvoiceAlreadyExistException("Invoice already exist in data base");
-            }
-            deleteInvoice(invoice.getId());
+            deleteInvoiceWithoutValidation(invoice.getId());
             invoices.put(invoice.getId(), invoiceCopy);
         } else {
             invoices.put(invoice.getId(), invoiceCopy);
@@ -41,6 +37,10 @@ public class InMemoryDatabase implements InvoiceRepository {
             throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
         }
         return invoices.get(id);
+    }
+
+    private void deleteInvoiceWithoutValidation(Long id) {
+        invoices.remove(id);
     }
 
     @Override

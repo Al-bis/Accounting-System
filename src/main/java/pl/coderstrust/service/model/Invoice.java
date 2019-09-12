@@ -1,4 +1,4 @@
-package pl.coderstrust.model;
+package pl.coderstrust.service.model;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ public final class Invoice {
         this.entries = invoice.getEntries();
     }
 
-    private Invoice(Long id, LocalDate date, Company seller, Company buyer,
+    public Invoice(Long id, LocalDate date, Company seller, Company buyer,
         List<InvoiceEntry> entries) {
         if (id < 1) {
             throw new IllegalArgumentException("Given ID cannot be lower then 1");

@@ -41,7 +41,7 @@
           <execution>
             <configuration>
               <excludes>
-                <exclude>pl/coderstrust/model/*.class</exclude>
+                <exclude>pl/coderstrust/service/model/*.class</exclude>
               </excludes>
               <rules>
                 <rule>

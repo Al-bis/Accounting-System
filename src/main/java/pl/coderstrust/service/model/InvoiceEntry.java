@@ -1,4 +1,4 @@
-package pl.coderstrust.model;
+package pl.coderstrust.service.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,18 +10,23 @@ public final class InvoiceEntry {
     private final String title;
     private final BigDecimal value;
     private final Vat vat;
+    private final Long amount;
 
-    private InvoiceEntry(Long id, String title, BigDecimal value, Vat vat) {
+    public InvoiceEntry(Long id, String title, BigDecimal value, Vat vat, Long amount) {
         if (id < 1) {
             throw new IllegalArgumentException("Given ID cannot be lower then 1");
         }
         if (value.doubleValue() < 0) {
             throw new IllegalArgumentException("Given value cannot be negative");
         }
+        if (amount < 1) {
+            throw new IllegalArgumentException("Given amount cannot be lower then 1");
+        }
         this.id = id;
         this.title = title;
         this.value = value;
         this.vat = vat;
+        this.amount = amount;
     }
 
     public Long getId() {
@@ -36,12 +41,26 @@ public final class InvoiceEntry {
         return value;
     }
 
+    public BigDecimal getTotalValue() {
+        return value.multiply(new BigDecimal(amount));
+    }
+
     public Vat getVat() {
         return vat;
     }
 
+    public Long getAmount() {
+        return amount;
+    }
+
     public BigDecimal getValueAfterTax() {
         return value.subtract(value.multiply(vat.getValue().divide(new BigDecimal("100"))))
+            .setScale(2, RoundingMode.CEILING);
+    }
+
+    public BigDecimal getTotalValueAfterTax() {
+        return value.subtract(value.multiply(vat.getValue().divide(new BigDecimal("100"))))
+            .multiply(new BigDecimal(amount))
             .setScale(2, RoundingMode.CEILING);
     }
 
@@ -57,12 +76,13 @@ public final class InvoiceEntry {
         return Objects.equals(id, that.id)
             && Objects.equals(title, that.title)
             && Objects.equals(value, that.value)
-            && vat == that.vat;
+            && vat == that.vat
+            && Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, value, vat);
+        return Objects.hash(id, title, value, vat, amount);
     }
 
     @Override
@@ -72,6 +92,7 @@ public final class InvoiceEntry {
             + ", title='" + title + '\''
             + ", value=" + value
             + ", vat=" + vat
+            + ", amount=" + amount
             + '}';
     }
 
@@ -85,6 +106,7 @@ public final class InvoiceEntry {
         private String title;
         private BigDecimal value;
         private Vat vat;
+        private Long amount;
 
         public InvoiceEntryBuilder id(Long id) {
             this.id = id;
@@ -106,6 +128,11 @@ public final class InvoiceEntry {
             return this;
         }
 
+        public InvoiceEntryBuilder amount(Long amount) {
+            this.amount = amount;
+            return this;
+        }
+
         public InvoiceEntry build() {
             if (id == null) {
                 throw new IllegalArgumentException("Id cannot be null");
@@ -119,7 +146,10 @@ public final class InvoiceEntry {
             if (vat == null) {
                 throw new IllegalArgumentException("Vat cannot be null");
             }
-            return new InvoiceEntry(id, title, value, vat);
+            if (amount == null) {
+                throw new IllegalArgumentException("Amount cannot be null");
+            }
+            return new InvoiceEntry(id, title, value, vat, amount);
         }
     }
 }

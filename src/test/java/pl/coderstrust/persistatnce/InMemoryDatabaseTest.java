@@ -3,19 +3,18 @@ package pl.coderstrust.persistatnce;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static pl.coderstrust.model.Vat.VAT_23;
-import static pl.coderstrust.model.Vat.VAT_5;
-import static pl.coderstrust.model.Vat.VAT_8;
-import static pl.coderstrust.model.Vat.VAT_ZW;
+import static pl.coderstrust.service.model.Vat.VAT_23;
+import static pl.coderstrust.service.model.Vat.VAT_5;
+import static pl.coderstrust.service.model.Vat.VAT_8;
+import static pl.coderstrust.service.model.Vat.VAT_ZW;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.exception.InvoiceAlreadyExistException;
-import pl.coderstrust.exception.InvoiceNotFoundException;
-import pl.coderstrust.model.Company;
-import pl.coderstrust.model.Invoice;
-import pl.coderstrust.model.InvoiceEntry;
+import pl.coderstrust.service.exception.InvoiceNotFoundException;
+import pl.coderstrust.service.model.Company;
+import pl.coderstrust.service.model.Invoice;
+import pl.coderstrust.service.model.InvoiceEntry;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,34 +34,40 @@ class InMemoryDatabaseTest {
         Company company1 = Company.builder()
             .name("A")
             .taxIdentificationNumber("123")
+            .address("ABC")
             .build();
         Company company2 = Company.builder()
             .name("B")
             .taxIdentificationNumber("321")
+            .address("XYZ")
             .build();
         InvoiceEntry entry1 = InvoiceEntry.builder()
             .id(1L)
             .title("Monitor")
             .value(new BigDecimal("999.89"))
             .vat(VAT_ZW)
+            .amount(2L)
             .build();
         InvoiceEntry entry2 = InvoiceEntry.builder()
             .id(2L)
             .title("Keyboard")
             .value(new BigDecimal("121.19"))
             .vat(VAT_8)
+            .amount(1L)
             .build();
         InvoiceEntry entry3 = InvoiceEntry.builder()
             .id(1L)
             .title("Processor")
             .value(new BigDecimal("1100.99"))
             .vat(VAT_5)
+            .amount(33L)
             .build();
         InvoiceEntry entry4 = InvoiceEntry.builder()
             .id(2L)
             .title("Graphics Card")
             .value(new BigDecimal("1599.99"))
             .vat(VAT_23)
+            .amount(12L)
             .build();
         invoice1 = Invoice.builder()
             .id(1L)
@@ -98,14 +103,6 @@ class InMemoryDatabaseTest {
     public void shouldThrownExceptionWhenExecuteGetInvoiceWithInvalidId() {
         Assertions.assertThrows(InvoiceNotFoundException.class, () -> {
             database.getInvoice(1L);
-        });
-    }
-
-    @Test
-    public void shouldThrownExceptionWhenTryToSaveAlreadyExistInvoice() {
-        database.saveInvoice(invoice1);
-        Assertions.assertThrows(InvoiceAlreadyExistException.class, () -> {
-            database.saveInvoice(invoice1);
         });
     }
 

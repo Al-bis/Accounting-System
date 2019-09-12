@@ -1,4 +1,4 @@
-package pl.coderstrust.model;
+package pl.coderstrust.service.model;
 
 import java.util.Objects;
 
@@ -6,10 +6,12 @@ public final class Company {
 
     private final String name;
     private final String taxIdentificationNumber;
+    private final String address;
 
-    private Company(String name, String taxIdentificationNumber) {
+    public Company(String name, String taxIdentificationNumber, String address) {
         this.name = name;
         this.taxIdentificationNumber = taxIdentificationNumber;
+        this.address = address;
     }
 
     public String getName() {
@@ -18,6 +20,10 @@ public final class Company {
 
     public String getTaxIdentificationNumber() {
         return taxIdentificationNumber;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     @Override
@@ -30,12 +36,13 @@ public final class Company {
         }
         Company company = (Company) object;
         return Objects.equals(name, company.name)
-            && Objects.equals(taxIdentificationNumber, company.taxIdentificationNumber);
+            && Objects.equals(taxIdentificationNumber, company.taxIdentificationNumber)
+            && Objects.equals(address, company.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, taxIdentificationNumber);
+        return Objects.hash(name, taxIdentificationNumber, address);
     }
 
     @Override
@@ -43,6 +50,7 @@ public final class Company {
         return "Company{"
             + "name='" + name + '\''
             + ", taxIdentificationNumber='" + taxIdentificationNumber + '\''
+            + ", address='" + address + '\''
             + '}';
     }
 
@@ -54,6 +62,7 @@ public final class Company {
 
         private String name;
         private String taxIdentificationNumber;
+        private String address;
 
         public CompanyBuilder name(String name) {
             this.name = name;
@@ -65,6 +74,11 @@ public final class Company {
             return this;
         }
 
+        public CompanyBuilder address(String address) {
+            this.address = address;
+            return this;
+        }
+
         public Company build() {
             if (name == null) {
                 throw new IllegalArgumentException("Name cannot be null");
@@ -72,7 +86,10 @@ public final class Company {
             if (taxIdentificationNumber == null) {
                 throw new IllegalArgumentException("Tax ID number cannot be null");
             }
-            return new Company(name, taxIdentificationNumber);
+            if (address == null) {
+                throw new IllegalArgumentException("Address cannot be null");
+            }
+            return new Company(name, taxIdentificationNumber, address);
         }
     }
 }

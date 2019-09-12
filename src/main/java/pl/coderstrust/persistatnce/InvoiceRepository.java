@@ -1,6 +1,6 @@
 package pl.coderstrust.persistatnce;
 
-import pl.coderstrust.model.Invoice;
+import pl.coderstrust.service.model.Invoice;
 
 import java.util.Collection;
 
@@ -13,4 +13,5 @@ public interface InvoiceRepository {
     Invoice getInvoice(Long id);
 
     void deleteInvoice(Long id);
+
 }

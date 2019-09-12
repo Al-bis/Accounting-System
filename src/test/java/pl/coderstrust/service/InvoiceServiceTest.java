@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.coderstrust.model.Invoice;
 import pl.coderstrust.persistatnce.InvoiceRepository;
+import pl.coderstrust.service.model.Invoice;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {

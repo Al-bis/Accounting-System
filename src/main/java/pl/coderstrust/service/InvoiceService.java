@@ -1,7 +1,7 @@
 package pl.coderstrust.service;
 
-import pl.coderstrust.model.Invoice;
 import pl.coderstrust.persistatnce.InvoiceRepository;
+import pl.coderstrust.service.model.Invoice;
 
 import java.util.Collection;
 
@@ -10,6 +10,9 @@ class InvoiceService {
     private InvoiceRepository database;
 
     public InvoiceService(InvoiceRepository database) {
+        if (database == null) {
+            throw new IllegalArgumentException("Given database cannot be null");
+        }
         this.database = database;
     }
 
