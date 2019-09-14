@@ -1,7 +1,7 @@
-package pl.coderstrust.utils;
+package pl.coderstrust.calculator;
 
-import pl.coderstrust.service.model.Invoice;
-import pl.coderstrust.service.model.InvoiceEntry;
+import pl.coderstrust.domain.Invoice;
+import pl.coderstrust.domain.InvoiceEntry;
 
 import java.math.BigDecimal;
 import java.util.Collection;

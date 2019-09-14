@@ -1,4 +1,4 @@
-package pl.coderstrust.service.exception;
+package pl.coderstrust.domain;
 
 public class InvoiceNotFoundException extends RuntimeException {
 

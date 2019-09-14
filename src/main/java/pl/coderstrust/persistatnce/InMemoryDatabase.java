@@ -1,7 +1,7 @@
 package pl.coderstrust.persistatnce;
 
-import pl.coderstrust.service.exception.InvoiceNotFoundException;
-import pl.coderstrust.service.model.Invoice;
+import pl.coderstrust.domain.Invoice;
+import pl.coderstrust.domain.InvoiceNotFoundException;
 
 import java.util.Collection;
 import java.util.List;

@@ -3,18 +3,15 @@ package pl.coderstrust.persistatnce;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static pl.coderstrust.service.model.Vat.VAT_23;
-import static pl.coderstrust.service.model.Vat.VAT_5;
-import static pl.coderstrust.service.model.Vat.VAT_8;
-import static pl.coderstrust.service.model.Vat.VAT_ZW;
+import static pl.coderstrust.domain.Vat.VAT_23;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.service.exception.InvoiceNotFoundException;
-import pl.coderstrust.service.model.Company;
-import pl.coderstrust.service.model.Invoice;
-import pl.coderstrust.service.model.InvoiceEntry;
+import pl.coderstrust.domain.Company;
+import pl.coderstrust.domain.Invoice;
+import pl.coderstrust.domain.InvoiceEntry;
+import pl.coderstrust.domain.InvoiceNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,72 +21,10 @@ import java.util.Collection;
 class InMemoryDatabaseTest {
 
     private InvoiceRepository database;
-    private Invoice invoice1;
-    private Invoice invoice2;
-    private Invoice invoice3;
 
     @BeforeEach
     void init() {
         database = new InMemoryDatabase();
-        Company company1 = Company.builder()
-            .name("A")
-            .taxIdentificationNumber("123")
-            .address("ABC")
-            .build();
-        Company company2 = Company.builder()
-            .name("B")
-            .taxIdentificationNumber("321")
-            .address("XYZ")
-            .build();
-        InvoiceEntry entry1 = InvoiceEntry.builder()
-            .id(1L)
-            .title("Monitor")
-            .value(new BigDecimal("999.89"))
-            .vat(VAT_ZW)
-            .amount(2L)
-            .build();
-        InvoiceEntry entry2 = InvoiceEntry.builder()
-            .id(2L)
-            .title("Keyboard")
-            .value(new BigDecimal("121.19"))
-            .vat(VAT_8)
-            .amount(1L)
-            .build();
-        InvoiceEntry entry3 = InvoiceEntry.builder()
-            .id(1L)
-            .title("Processor")
-            .value(new BigDecimal("1100.99"))
-            .vat(VAT_5)
-            .amount(33L)
-            .build();
-        InvoiceEntry entry4 = InvoiceEntry.builder()
-            .id(2L)
-            .title("Graphics Card")
-            .value(new BigDecimal("1599.99"))
-            .vat(VAT_23)
-            .amount(12L)
-            .build();
-        invoice1 = Invoice.builder()
-            .id(1L)
-            .date(LocalDate.now())
-            .seller(company1)
-            .buyer(company2)
-            .entries(Arrays.asList(entry1, entry2))
-            .build();
-        invoice2 = Invoice.builder()
-            .id(2L)
-            .date(LocalDate.now())
-            .seller(company2)
-            .buyer(company1)
-            .entries(Arrays.asList(entry3, entry4))
-            .build();
-        invoice3 = Invoice.builder()
-            .id(1L)
-            .date(LocalDate.now())
-            .seller(company2)
-            .buyer(company1)
-            .entries(Arrays.asList(entry3, entry4))
-            .build();
     }
 
     @Test
@@ -116,6 +51,14 @@ class InMemoryDatabaseTest {
     @Test
     public void shouldSaveAndGetInvoice() {
         // given
+        var company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        var company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
+            .address("b").build();
+        var invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
+        var invoice1 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
         database.saveInvoice(invoice1);
 
         // when
@@ -128,6 +71,18 @@ class InMemoryDatabaseTest {
     @Test
     public void shouldReturnAllInvoices() {
         // given
+        var company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        var company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
+            .address("b").build();
+        var invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .value(new BigDecimal("12.34")).vat(VAT_23).amount(3L).build();
+        var invoiceEntry2 = new InvoiceEntry.InvoiceEntryBuilder().id(2L).title("D")
+            .value(new BigDecimal("10.00")).vat(VAT_23).amount(4L).build();
+        var invoice1 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+        var invoice2 = new Invoice.InvoiceBuilder().id(2L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry2)).build();
         database.saveInvoice(invoice1);
         database.saveInvoice(invoice2);
         Collection<Invoice> expected = Arrays.asList(invoice1, invoice2);
@@ -142,6 +97,18 @@ class InMemoryDatabaseTest {
     @Test
     public void shouldSaveAndDeleteInvoice() {
         //given
+        var company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        var company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
+            .address("b").build();
+        var invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .value(new BigDecimal("12.34")).vat(VAT_23).amount(3L).build();
+        var invoiceEntry2 = new InvoiceEntry.InvoiceEntryBuilder().id(2L).title("D")
+            .value(new BigDecimal("10.00")).vat(VAT_23).amount(4L).build();
+        var invoice1 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+        var invoice2 = new Invoice.InvoiceBuilder().id(2L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry2)).build();
         database.saveInvoice(invoice1);
         database.saveInvoice(invoice2);
 
@@ -158,16 +125,29 @@ class InMemoryDatabaseTest {
     @Test
     public void shouldUpdateInvoice() {
         // give
+        var company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        var company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
+            .address("b").build();
+        var entry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .value(new BigDecimal("12.34")).vat(VAT_23).amount(3L).build();
+        var entry2 = new InvoiceEntry.InvoiceEntryBuilder().id(2L).title("D")
+            .value(new BigDecimal("10.00")).vat(VAT_23).amount(4L).build();
+        var invoice1 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(entry1)).build();
+        var invoice2 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(entry2)).build();
         database.saveInvoice(invoice1);
-        database.saveInvoice(invoice3);
+        database.saveInvoice(invoice2);
 
         // when
         Invoice expected = database.getInvoice(1L);
 
         //then
         assertAll(
-            () -> assertEquals(invoice3, expected),
+            () -> assertEquals(invoice2, expected),
             () -> assertEquals(1, database.getAllInvoices().size())
         );
     }
+
 }

@@ -1,7 +1,6 @@
-package pl.coderstrust.service;
+package pl.coderstrust.domain;
 
 import pl.coderstrust.persistatnce.InvoiceRepository;
-import pl.coderstrust.service.model.Invoice;
 
 import java.util.Collection;
 
@@ -20,8 +19,9 @@ class InvoiceService {
         return database.getAllInvoices();
     }
 
-    public void saveInvoice(Invoice invoice) {
+    public Invoice saveInvoice(Invoice invoice) {
         database.saveInvoice(invoice);
+        return invoice;
     }
 
     public Invoice getInvoice(Long id) {

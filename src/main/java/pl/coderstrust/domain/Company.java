@@ -1,4 +1,4 @@
-package pl.coderstrust.service.model;
+package pl.coderstrust.domain;
 
 import java.util.Objects;
 

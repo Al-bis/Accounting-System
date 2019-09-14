@@ -1,4 +1,4 @@
-package pl.coderstrust.service;
+package pl.coderstrust.domain;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.persistatnce.InvoiceRepository;
-import pl.coderstrust.service.model.Invoice;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
