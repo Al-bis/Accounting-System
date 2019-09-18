@@ -2,9 +2,10 @@ package pl.coderstrust.domain;
 
 import pl.coderstrust.persistatnce.InvoiceRepository;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
-class InvoiceService {
+public class InvoiceService {
 
     private InvoiceRepository database;
 
@@ -17,6 +18,10 @@ class InvoiceService {
 
     public Collection<Invoice> getAllInvoices() {
         return database.getAllInvoices();
+    }
+
+    public Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate) {
+        return database.getAllInvoices(fromDate, toDate);
     }
 
     public Invoice saveInvoice(Invoice invoice) {

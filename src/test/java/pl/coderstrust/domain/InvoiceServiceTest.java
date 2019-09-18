@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.persistatnce.InvoiceRepository;
 
+import java.time.LocalDate;
+
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
 
@@ -32,6 +34,22 @@ class InvoiceServiceTest {
         // then
         verify(database, times(3)).saveInvoice(any());
         verify(database, times(1)).getAllInvoices();
+        verify(database, times(0)).getInvoice(anyLong());
+        verify(database, times(0)).deleteInvoice(anyLong());
+    }
+
+    @Test
+    public void shouldAddInvoicesToDbAndThenReturnAllInvoicesFromDbInGivenRange() {
+        // when
+        invoiceService.saveInvoice(any(Invoice.class));
+        invoiceService.saveInvoice(any(Invoice.class));
+        invoiceService.saveInvoice(any(Invoice.class));
+        invoiceService.getAllInvoices(any(LocalDate.class), any(LocalDate.class));
+
+        // then
+        verify(database, times(3)).saveInvoice(any());
+        verify(database, times(0)).getAllInvoices();
+        verify(database, times(1)).getAllInvoices(any(), any());
         verify(database, times(0)).getInvoice(anyLong());
         verify(database, times(0)).deleteInvoice(anyLong());
     }

@@ -1,14 +1,22 @@
 package pl.coderstrust.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public enum Vat {
 
-    VAT_23(23), VAT_8(8), VAT_5(5), VAT_0(0), VAT_ZW(0);
+    VAT_23(23),
+    VAT_8(8),
+    VAT_5(5),
+    VAT_0(0),
+    VAT_ZW(0);
 
     private BigDecimal value;
 
-    Vat(long value) {
+    @JsonCreator
+    Vat(@JsonProperty("value") long value) {
         this.value = new BigDecimal(value);
     }
 

@@ -1,8 +1,12 @@
 package pl.coderstrust.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class Invoice {
 
@@ -20,8 +24,18 @@ public final class Invoice {
         this.entries = invoice.getEntries();
     }
 
-    public Invoice(Long id, LocalDate date, Company seller, Company buyer,
-        List<InvoiceEntry> entries) {
+    public Invoice(Long id, Invoice invoice) {
+        this.id = id;
+        this.date = invoice.getDate();
+        this.seller = invoice.getSeller();
+        this.buyer = invoice.getBuyer();
+        this.entries = invoice.getEntries();
+    }
+
+    @JsonCreator
+    public Invoice(@JsonProperty("id") Long id, @JsonProperty("date") LocalDate date,
+        @JsonProperty("seller") Company seller, @JsonProperty("buyer") Company buyer,
+        @JsonProperty("entries") List<InvoiceEntry> entries) {
         if (id < 1) {
             throw new IllegalArgumentException("Given ID cannot be lower then 1");
         }
@@ -49,7 +63,7 @@ public final class Invoice {
     }
 
     public List<InvoiceEntry> getEntries() {
-        return List.copyOf(entries);
+        return entries.stream().collect(Collectors.toList());
     }
 
     @Override

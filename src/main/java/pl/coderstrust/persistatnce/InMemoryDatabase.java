@@ -3,18 +3,42 @@ package pl.coderstrust.persistatnce;
 import pl.coderstrust.domain.Invoice;
 import pl.coderstrust.domain.InvoiceNotFoundException;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryDatabase implements InvoiceRepository {
 
     private Map<Long, Invoice> invoices = new ConcurrentHashMap<>();
+    private AtomicLong invoiceId = new AtomicLong();
 
     @Override
     public Collection<Invoice> getAllInvoices() {
-        return List.copyOf(invoices.values());
+        return Collections.unmodifiableCollection(invoices.values());
+    }
+
+    @Override
+    public Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate) {
+        if (fromDate == null) {
+            throw new IllegalArgumentException("Given fromDate cannot be null");
+        }
+        if (toDate == null) {
+            throw new IllegalArgumentException("Given toDate cannot be null");
+        }
+        if (toDate.compareTo(fromDate) == -1) {
+            throw new IllegalArgumentException("Given fromDate must be earlier than toDate");
+        }
+        Collection<Invoice> invoicesInTimeRange = new ArrayList<>();
+        for (Invoice invoice : invoices.values()) {
+            if (invoice.getDate().isAfter(fromDate) && invoice.getDate().isBefore(toDate)) {
+                invoicesInTimeRange.add(invoice);
+            }
+        }
+        return Collections.unmodifiableCollection(invoicesInTimeRange);
     }
 
     @Override
@@ -22,11 +46,13 @@ public class InMemoryDatabase implements InvoiceRepository {
         if (invoice == null) {
             throw new IllegalArgumentException("Given invoice cannot be null");
         }
-        Invoice invoiceCopy = new Invoice(invoice);
-        if (invoices.containsKey(invoice.getId())) {
-            deleteInvoiceWithoutValidation(invoice.getId());
-            invoices.put(invoice.getId(), invoiceCopy);
+        if (invoice.getId() == null || !invoices.containsKey(invoice.getId())) {
+            Long invoiceId = this.invoiceId.incrementAndGet();
+            Invoice invoiceCopy = new Invoice(invoiceId, invoice);
+            invoices.put(invoiceId, invoiceCopy);
         } else {
+            Invoice invoiceCopy = new Invoice(invoice);
+            deleteInvoiceWithoutValidation(invoice.getId());
             invoices.put(invoice.getId(), invoiceCopy);
         }
     }
