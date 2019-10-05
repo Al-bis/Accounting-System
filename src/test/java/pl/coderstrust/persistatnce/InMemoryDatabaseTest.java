@@ -29,42 +29,42 @@ class InMemoryDatabaseTest {
     }
 
     @Test
-    public void shouldThrownExceptionWhenTryToSaveNull() {
+    void shouldThrownExceptionWhenTryToSaveNull() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             database.saveInvoice(null);
         });
     }
 
     @Test
-    public void shouldThrownExceptionWhenExecuteGetInvoiceWithInvalidId() {
+    void shouldThrownExceptionWhenExecuteGetInvoiceWithInvalidId() {
         Assertions.assertThrows(InvoiceNotFoundException.class, () -> {
             database.getInvoice(1L);
         });
     }
 
     @Test
-    public void shouldThrownExceptionWhenTryToDeleteNotExistInvoice() {
+    void shouldThrownExceptionWhenTryToDeleteNotExistInvoice() {
         Assertions.assertThrows(InvoiceNotFoundException.class, () -> {
             database.deleteInvoice(1L);
         });
     }
 
     @Test
-    public void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullFromDate() {
+    void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullFromDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             database.getAllInvoices(null, LocalDate.of(2019, 3, 10));
         });
     }
 
     @Test
-    public void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullToDate() {
+    void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullToDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             database.getAllInvoices(LocalDate.of(2019, 3, 10), null);
         });
     }
 
     @Test
-    public void shouldThrownExceptionWhenTryToGetAllInvoicesWithToDateEarlierThenFromDate() {
+    void shouldThrownExceptionWhenTryToGetAllInvoicesWithToDateEarlierThenFromDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             database.getAllInvoices(LocalDate.of(2019, 3, 10),
                 LocalDate.of(2018, 7, 21));
@@ -72,7 +72,29 @@ class InMemoryDatabaseTest {
     }
 
     @Test
-    public void shouldSaveAndGetInvoice() {
+    void shouldSaveInvoiceWhichDoesNotHaveIdAndReturnThisInvoiceId() {
+        // given
+        Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        Company company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
+            .address("b").build();
+        InvoiceEntry invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
+        Invoice invoice1 = new Invoice.InvoiceBuilder().date(LocalDate.now()).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+
+        // when
+        Long invoiceId1 = database.saveInvoice(invoice1);
+        Long invoiceId2 = database.saveInvoice(invoice1);
+
+        // then
+        assertEquals((Long) 1L, invoiceId1);
+        assertEquals((Long) 2L, invoiceId2);
+    }
+
+
+    @Test
+    void shouldSaveAndGetInvoice() {
         // given
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();
@@ -82,17 +104,18 @@ class InMemoryDatabaseTest {
             .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
         Invoice invoice1 = new Invoice.InvoiceBuilder().id(1L).date(LocalDate.now()).buyer(company1)
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
-        database.saveInvoice(invoice1);
 
         // when
+        Long invoiceId = database.saveInvoice(invoice1);
         Invoice expected = database.getInvoice(1L);
 
         //then
+        assertEquals(invoice1.getId(), invoiceId);
         assertEquals(invoice1, expected);
     }
 
     @Test
-    public void shouldReturnAllInvoicesInGivenDateRange() {
+    void shouldReturnAllInvoicesInGivenDateRange() {
         // given
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();
@@ -128,7 +151,7 @@ class InMemoryDatabaseTest {
     }
 
     @Test
-    public void shouldReturnAllInvoices() {
+    void shouldReturnAllInvoices() {
         // given
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();
@@ -154,7 +177,7 @@ class InMemoryDatabaseTest {
     }
 
     @Test
-    public void shouldSaveAndDeleteInvoice() {
+    void shouldSaveAndDeleteInvoice() {
         //given
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();
@@ -182,7 +205,7 @@ class InMemoryDatabaseTest {
     }
 
     @Test
-    public void shouldUpdateInvoice() {
+    void shouldUpdateInvoice() {
         // give
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();

@@ -24,7 +24,7 @@ class InvoiceServiceTest {
     private InvoiceService invoiceService;
 
     @Test
-    public void shouldAddInvoicesToDbAndThenReturnAllInvoicesFromDb() {
+    void shouldAddInvoicesToDbAndThenReturnAllInvoicesFromDb() {
         // when
         invoiceService.saveInvoice(any(Invoice.class));
         invoiceService.saveInvoice(any(Invoice.class));
@@ -39,7 +39,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void shouldAddInvoicesToDbAndThenReturnAllInvoicesFromDbInGivenRange() {
+    void shouldAddInvoicesToDbAndThenReturnAllInvoicesFromDbInGivenRange() {
         // when
         invoiceService.saveInvoice(any(Invoice.class));
         invoiceService.saveInvoice(any(Invoice.class));
@@ -55,7 +55,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void shouldAddInvoiceToDbAndThenDeleteThisInvoiceFromDb() {
+    void shouldAddInvoiceToDbAndThenDeleteThisInvoiceFromDb() {
         // when
         invoiceService.saveInvoice(any(Invoice.class));
         invoiceService.deleteInvoice(anyLong());
@@ -68,7 +68,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void shouldAddInvoiceToDbAndThenReturnThisInvoiceFromDb() {
+    void shouldAddInvoiceToDbAndThenReturnThisInvoiceFromDb() {
         // when
         invoiceService.saveInvoice(any(Invoice.class));
         invoiceService.getInvoice(anyLong());

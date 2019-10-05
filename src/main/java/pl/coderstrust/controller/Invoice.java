@@ -1,4 +1,7 @@
-package pl.coderstrust.domain;
+package pl.coderstrust.controller;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,8 +32,10 @@ public final class Invoice {
         this.entries = invoice.getEntries();
     }
 
-    public Invoice(Long id, LocalDate date, Company seller, Company buyer,
-        List<InvoiceEntry> entries) {
+    @JsonCreator
+    public Invoice(@JsonProperty("id") Long id, @JsonProperty("date") LocalDate date,
+        @JsonProperty("seller") Company seller, @JsonProperty("buyer") Company buyer,
+        @JsonProperty("entries") List<InvoiceEntry> entries) {
         this.id = id;
         this.date = date;
         this.seller = seller;

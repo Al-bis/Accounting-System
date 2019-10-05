@@ -49,6 +49,10 @@
                 <exclude>pl/coderstrust/domain/Invoice.class</exclude>
                 <exclude>pl/coderstrust/domain/InvoiceEntry.class</exclude>
                 <exclude>pl/coderstrust/domain/Vat.class</exclude>
+                <exclude>pl/coderstrust/controller/Company.class</exclude>
+                <exclude>pl/coderstrust/controller/Invoice.class</exclude>
+                <exclude>pl/coderstrust/controller/InvoiceEntry.class</exclude>
+                <exclude>pl/coderstrust/controller/Vat.class</exclude>
                 <exclude>pl/coderstrust/Application.class</exclude>
               </excludes>
               <rules>

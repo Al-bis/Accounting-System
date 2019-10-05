@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static pl.coderstrust.domain.Vat.VAT_23;
+import static pl.coderstrust.controller.Vat.VAT_23;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-import pl.coderstrust.domain.Company;
-import pl.coderstrust.domain.Invoice;
-import pl.coderstrust.domain.InvoiceEntry;
 import pl.coderstrust.domain.InvoiceService;
 
 import java.math.BigDecimal;
@@ -35,59 +32,62 @@ class InvoiceControllerTest {
     private InvoiceController controller;
 
     @Test
-    public void shouldReturnAllInvoices() {
+    void shouldReturnAllInvoices() {
         // given
-        Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
-            .address("a").build();
-        Company company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
-            .address("b").build();
-        InvoiceEntry invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
-            .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
-        InvoiceEntry invoiceEntry2 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("D")
-            .value(new BigDecimal("10.00")).vat(VAT_23).amount(4L).build();
-        Invoice invoice1 = new Invoice.InvoiceBuilder().id(1L)
-            .date(LocalDate.of(2018, 4, 9)).buyer(company1)
-            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
-        Invoice invoice2 = new Invoice.InvoiceBuilder().id(2L)
-            .date(LocalDate.of(2019, 1, 28)).buyer(company2)
+        pl.coderstrust.domain.Company company1 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("A").taxIdentificationNumber("1").address("a").build();
+        pl.coderstrust.domain.Company company2 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("B").taxIdentificationNumber("2").address("b").build();
+        pl.coderstrust.domain.InvoiceEntry invoiceEntry1 = new pl.coderstrust.domain.InvoiceEntry
+            .InvoiceEntryBuilder().id(1L).title("C").value(new BigDecimal("12.34"))
+            .vat(pl.coderstrust.domain.Vat.VAT_23).amount(2L).build();
+        pl.coderstrust.domain.InvoiceEntry invoiceEntry2 = new pl.coderstrust.domain.InvoiceEntry
+            .InvoiceEntryBuilder().id(1L).title("D").value(new BigDecimal("10.00"))
+            .vat(pl.coderstrust.domain.Vat.VAT_23).amount(4L).build();
+        pl.coderstrust.domain.Invoice invoice1 = new pl.coderstrust.domain.Invoice
+            .InvoiceBuilder().id(1L).date(LocalDate.of(2018, 4, 9))
+            .buyer(company1).seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+        pl.coderstrust.domain.Invoice invoice2 = new pl.coderstrust.domain.Invoice.InvoiceBuilder()
+            .id(2L).date(LocalDate.of(2019, 1, 28)).buyer(company2)
             .seller(company1).entries(Arrays.asList(invoiceEntry2)).build();
         when(service.getAllInvoices()).thenReturn(Arrays.asList(invoice1, invoice2));
 
         // when
-        Collection<Invoice> invoices = controller.getAllInvoices();
+        ResponseEntity<Collection<Invoice>> invoices = controller.getAllInvoices();
 
         // then
-        assertThat(invoices).hasSize(2);
-        assertThat(invoices).containsExactly(invoice1, invoice2);
+        assertThat(invoices.getBody()).hasSize(2);
+        assertThat(invoices.getBody()).containsExactly(ModelsMapper.mapInvoice(invoice1),
+            ModelsMapper.mapInvoice(invoice2));
     }
 
     @Test
-    public void shouldReturnAllInvoicesInGivenDateRange() {
+    void shouldReturnAllInvoicesInGivenDateRange() {
         // given
-        Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
-            .address("a").build();
-        Company company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
-            .address("b").build();
-        InvoiceEntry invoiceEntry2 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("D")
-            .value(new BigDecimal("10.00")).vat(VAT_23).amount(4L).build();
-        Invoice invoice2 = new Invoice.InvoiceBuilder().id(2L)
-            .date(LocalDate.of(2019, 1, 28)).buyer(company2)
-            .seller(company1).entries(Arrays.asList(invoiceEntry2)).build();
+        pl.coderstrust.domain.Company company1 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("A").taxIdentificationNumber("1").address("a").build();
+        pl.coderstrust.domain.Company company2 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("B").taxIdentificationNumber("2").address("b").build();
+        pl.coderstrust.domain.InvoiceEntry invoiceEntry2 = new pl.coderstrust.domain.InvoiceEntry
+            .InvoiceEntryBuilder().id(1L).title("D").value(new BigDecimal("10.00"))
+            .vat(pl.coderstrust.domain.Vat.VAT_23).amount(4L).build();
+        pl.coderstrust.domain.Invoice invoice2 = new pl.coderstrust.domain.Invoice
+            .InvoiceBuilder().id(2L).date(LocalDate.of(2019, 1, 28))
+            .buyer(company2).seller(company1).entries(Arrays.asList(invoiceEntry2)).build();
         LocalDate date1 = LocalDate.of(2019, 1, 1);
         LocalDate date2 = LocalDate.of(2019, 2, 1);
         when(service.getAllInvoices(date1, date2)).thenReturn(Arrays.asList(invoice2));
 
         // when
-        Collection<Invoice> invoices = controller
-            .getAllInvoices(date1, date2);
+        ResponseEntity<Collection<Invoice>> invoices = controller.getAllInvoices(date1, date2);
 
         // then
-        assertThat(invoices).hasSize(1);
-        assertThat(invoices).containsExactly(invoice2);
+        assertThat(invoices.getBody()).hasSize(1);
+        assertThat(invoices.getBody()).containsExactly(ModelsMapper.mapInvoice(invoice2));
     }
 
     @Test
-    public void shouldOnlySaveInvoice() {
+    void shouldOnlySaveInvoice() {
         // given
         Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
             .address("a").build();
@@ -103,7 +103,7 @@ class InvoiceControllerTest {
         controller.saveInvoice(invoice1);
 
         // then
-        verify(service, times(1)).saveInvoice(invoice1);
+        verify(service, times(1)).saveInvoice(any());
         verify(service, times(0)).getAllInvoices();
         verify(service, times(0)).getAllInvoices(any(), any());
         verify(service, times(0)).getInvoice(anyLong());
@@ -111,16 +111,17 @@ class InvoiceControllerTest {
     }
 
     @Test
-    public void shouldReturnInvoiceBaseOnGivenId() {
+    void shouldReturnInvoiceBaseOnGivenId() {
         // given
-        Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
-            .address("a").build();
-        Company company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
-            .address("b").build();
-        InvoiceEntry invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
-            .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
-        Invoice invoice1 = new Invoice.InvoiceBuilder().id(1L)
-            .date(LocalDate.of(2018, 4, 9)).buyer(company1)
+        pl.coderstrust.domain.Company company1 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("A").taxIdentificationNumber("1").address("a").build();
+        pl.coderstrust.domain.Company company2 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("B").taxIdentificationNumber("2").address("b").build();
+        pl.coderstrust.domain.InvoiceEntry invoiceEntry1 = new pl.coderstrust.domain.InvoiceEntry
+            .InvoiceEntryBuilder().id(1L).title("C").value(new BigDecimal("12.34"))
+            .vat(pl.coderstrust.domain.Vat.VAT_23).amount(2L).build();
+        pl.coderstrust.domain.Invoice invoice1 = new pl.coderstrust.domain.Invoice.InvoiceBuilder()
+            .id(1L).date(LocalDate.of(2018, 4, 9)).buyer(company1)
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
         when(service.getInvoice(1L)).thenReturn(invoice1);
 
@@ -128,20 +129,21 @@ class InvoiceControllerTest {
         ResponseEntity<Invoice> responseEntity = controller.getInvoice(1L);
 
         // then
-        assertEquals(responseEntity.getBody(), invoice1);
+        assertEquals(responseEntity.getBody(), ModelsMapper.mapInvoice(invoice1));
     }
 
     @Test
-    public void shouldDeleteInvoiceBaseOnGivenId() {
+    void shouldDeleteInvoiceBaseOnGivenId() {
         // given
-        Company company1 = new Company.CompanyBuilder().name("A").taxIdentificationNumber("1")
-            .address("a").build();
-        Company company2 = new Company.CompanyBuilder().name("B").taxIdentificationNumber("2")
-            .address("b").build();
-        InvoiceEntry invoiceEntry1 = new InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
-            .value(new BigDecimal("12.34")).vat(VAT_23).amount(2L).build();
-        Invoice invoice1 = new Invoice.InvoiceBuilder().id(1L)
-            .date(LocalDate.of(2018, 4, 9)).buyer(company1)
+        pl.coderstrust.domain.Company company1 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("A").taxIdentificationNumber("1").address("a").build();
+        pl.coderstrust.domain.Company company2 = new pl.coderstrust.domain.Company.CompanyBuilder()
+            .name("B").taxIdentificationNumber("2").address("b").build();
+        pl.coderstrust.domain.InvoiceEntry invoiceEntry1 = new pl.coderstrust.domain.InvoiceEntry
+            .InvoiceEntryBuilder().id(1L).title("C").value(new BigDecimal("12.34"))
+            .vat(pl.coderstrust.domain.Vat.VAT_23).amount(2L).build();
+        pl.coderstrust.domain.Invoice invoice1 = new pl.coderstrust.domain.Invoice.InvoiceBuilder()
+            .id(1L).date(LocalDate.of(2018, 4, 9)).buyer(company1)
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
         when(service.getInvoice(1L)).thenReturn(invoice1);
 

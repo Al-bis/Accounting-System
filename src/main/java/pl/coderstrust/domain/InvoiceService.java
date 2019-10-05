@@ -24,9 +24,8 @@ public class InvoiceService {
         return database.getAllInvoices(fromDate, toDate);
     }
 
-    public Invoice saveInvoice(Invoice invoice) {
-        database.saveInvoice(invoice);
-        return invoice;
+    public Long saveInvoice(Invoice invoice) {
+        return database.saveInvoice(invoice);
     }
 
     public Invoice getInvoice(Long id) {

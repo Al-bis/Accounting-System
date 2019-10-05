@@ -1,4 +1,7 @@
-package pl.coderstrust.domain;
+package pl.coderstrust.controller;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,7 +15,10 @@ public final class InvoiceEntry {
     private final Vat vat;
     private final Long amount;
 
-    public InvoiceEntry(Long id, String title, BigDecimal value, Vat vat, Long amount) {
+    @JsonCreator
+    public InvoiceEntry(@JsonProperty("id") Long id, @JsonProperty("title") String title,
+        @JsonProperty("value") BigDecimal value, @JsonProperty("vat") Vat vat,
+        @JsonProperty("amount") Long amount) {
         if (value.doubleValue() < 0) {
             throw new IllegalArgumentException("Given value cannot be negative");
         }

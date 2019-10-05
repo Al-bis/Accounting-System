@@ -1,4 +1,7 @@
-package pl.coderstrust.domain;
+package pl.coderstrust.controller;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
@@ -8,7 +11,10 @@ public final class Company {
     private final String taxIdentificationNumber;
     private final String address;
 
-    public Company(String name, String taxIdentificationNumber, String address) {
+    @JsonCreator
+    public Company(@JsonProperty("name") String name,
+        @JsonProperty("taxIdentificationNumber") String taxIdentificationNumber,
+        @JsonProperty("address") String address) {
         this.name = name;
         this.taxIdentificationNumber = taxIdentificationNumber;
         this.address = address;
@@ -92,4 +98,5 @@ public final class Company {
             return new Company(name, taxIdentificationNumber, address);
         }
     }
+
 }

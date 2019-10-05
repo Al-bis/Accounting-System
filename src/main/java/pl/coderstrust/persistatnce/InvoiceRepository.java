@@ -11,7 +11,7 @@ public interface InvoiceRepository {
 
     Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate);
 
-    void saveInvoice(Invoice invoice);
+    Long saveInvoice(Invoice invoice);
 
     Invoice getInvoice(Long id);
 

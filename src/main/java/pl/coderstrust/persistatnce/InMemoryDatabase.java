@@ -29,7 +29,7 @@ public class InMemoryDatabase implements InvoiceRepository {
         if (toDate == null) {
             throw new IllegalArgumentException("Given toDate cannot be null");
         }
-        if (toDate.compareTo(fromDate) == -1) {
+        if (toDate.compareTo(fromDate) <= -1) {
             throw new IllegalArgumentException("Given fromDate must be earlier than toDate");
         }
         Collection<Invoice> invoicesInTimeRange = new ArrayList<>();
@@ -42,7 +42,7 @@ public class InMemoryDatabase implements InvoiceRepository {
     }
 
     @Override
-    public void saveInvoice(Invoice invoice) {
+    public Long saveInvoice(Invoice invoice) {
         if (invoice == null) {
             throw new IllegalArgumentException("Given invoice cannot be null");
         }
@@ -50,10 +50,13 @@ public class InMemoryDatabase implements InvoiceRepository {
             Long invoiceId = this.invoiceId.incrementAndGet();
             Invoice invoiceCopy = new Invoice(invoiceId, invoice);
             invoices.put(invoiceId, invoiceCopy);
+            return invoiceId;
         } else {
             Invoice invoiceCopy = new Invoice(invoice);
-            deleteInvoiceWithoutValidation(invoice.getId());
-            invoices.put(invoice.getId(), invoiceCopy);
+            Long invoiceId = invoice.getId();
+            deleteInvoiceWithoutValidation(invoiceId);
+            invoices.put(invoiceId, invoiceCopy);
+            return invoiceId;
         }
     }
 
