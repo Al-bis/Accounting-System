@@ -24,6 +24,9 @@ public class InvoiceController {
     private InvoiceService invoiceService;
 
     public InvoiceController(InvoiceService invoiceService) {
+        if (invoiceService == null) {
+            throw new IllegalArgumentException("Given service cannot be null");
+        }
         this.invoiceService = invoiceService;
     }
 

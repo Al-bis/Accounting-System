@@ -17,7 +17,7 @@ import java.util.Collection;
 class InvoiceValueCalculatorTest {
 
     @Test
-    public void shouldReturnTotalValue() {
+    void shouldReturnTotalValue() {
         // given
         Company company1 = Company.builder().name("A").taxIdentificationNumber("123")
             .address("ABC").build();
@@ -38,7 +38,7 @@ class InvoiceValueCalculatorTest {
     }
 
     @Test
-    public void shouldReturnTotalValueAfterTax() {
+    void shouldReturnTotalValueAfterTax() {
         // given
         Company company1 = Company.builder().name("A").taxIdentificationNumber("123")
             .address("ABC").build();
@@ -59,7 +59,7 @@ class InvoiceValueCalculatorTest {
     }
 
     @Test
-    public void shouldReturnTotalValueForMoreThenOneInvoice() {
+    void shouldReturnTotalValueForMoreThenOneInvoice() {
         // given
         Company company1 = Company.builder().name("A").taxIdentificationNumber("123")
             .address("ABC").build();
@@ -87,7 +87,7 @@ class InvoiceValueCalculatorTest {
     }
 
     @Test
-    public void shouldReturnTotalValueAfterTaxForMoreThenOneInvoice() {
+    void shouldReturnTotalValueAfterTaxForMoreThenOneInvoice() {
         // given
         Company company1 = Company.builder().name("A").taxIdentificationNumber("123")
             .address("ABC").build();

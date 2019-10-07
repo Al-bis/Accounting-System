@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class InMemoryDatabase implements InvoiceRepository {
+class InMemoryDatabase implements InvoiceRepository {
 
     private Map<Long, Invoice> invoices = new ConcurrentHashMap<>();
     private AtomicLong invoiceId = new AtomicLong();
@@ -22,7 +22,7 @@ public class InMemoryDatabase implements InvoiceRepository {
     }
 
     @Override
-    public Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate) {
+    public Collection<Invoice> getInvoices(LocalDate fromDate, LocalDate toDate) {
         if (fromDate == null) {
             throw new IllegalArgumentException("Given fromDate cannot be null");
         }
@@ -54,7 +54,7 @@ public class InMemoryDatabase implements InvoiceRepository {
         } else {
             Invoice invoiceCopy = new Invoice(invoice);
             Long invoiceId = invoice.getId();
-            deleteInvoiceWithoutValidation(invoiceId);
+            invoices.remove(invoiceId);
             invoices.put(invoiceId, invoiceCopy);
             return invoiceId;
         }
@@ -66,10 +66,6 @@ public class InMemoryDatabase implements InvoiceRepository {
             throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
         }
         return invoices.get(id);
-    }
-
-    private void deleteInvoiceWithoutValidation(Long id) {
-        invoices.remove(id);
     }
 
     @Override

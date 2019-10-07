@@ -9,7 +9,7 @@ public interface InvoiceRepository {
 
     Collection<Invoice> getAllInvoices();
 
-    Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate);
+    Collection<Invoice> getInvoices(LocalDate fromDate, LocalDate toDate);
 
     Long saveInvoice(Invoice invoice);
 

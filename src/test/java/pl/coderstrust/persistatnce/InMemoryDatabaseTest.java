@@ -52,21 +52,21 @@ class InMemoryDatabaseTest {
     @Test
     void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullFromDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            database.getAllInvoices(null, LocalDate.of(2019, 3, 10));
+            database.getInvoices(null, LocalDate.of(2019, 3, 10));
         });
     }
 
     @Test
     void shouldThrownExceptionWhenTryToGetAllInvoicesWithNullToDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            database.getAllInvoices(LocalDate.of(2019, 3, 10), null);
+            database.getInvoices(LocalDate.of(2019, 3, 10), null);
         });
     }
 
     @Test
     void shouldThrownExceptionWhenTryToGetAllInvoicesWithToDateEarlierThenFromDate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            database.getAllInvoices(LocalDate.of(2019, 3, 10),
+            database.getInvoices(LocalDate.of(2019, 3, 10),
                 LocalDate.of(2018, 7, 21));
         });
     }
@@ -142,7 +142,7 @@ class InMemoryDatabaseTest {
 
         // when
         Collection<Invoice> actual = database
-            .getAllInvoices(LocalDate.of(2019, 1, 1),
+            .getInvoices(LocalDate.of(2019, 1, 1),
                 LocalDate.of(2019, 4, 29));
 
         //then

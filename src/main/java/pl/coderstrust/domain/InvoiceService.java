@@ -21,7 +21,7 @@ public class InvoiceService {
     }
 
     public Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate) {
-        return database.getAllInvoices(fromDate, toDate);
+        return database.getInvoices(fromDate, toDate);
     }
 
     public Long saveInvoice(Invoice invoice) {
