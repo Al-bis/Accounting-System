@@ -1,5 +1,7 @@
 package pl.coderstrust.persistatnce;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 import pl.coderstrust.domain.Invoice;
 import pl.coderstrust.domain.InvoiceNotFoundException;
 
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
+@Primary
 class InMemoryDatabase implements InvoiceRepository {
 
     private Map<Long, Invoice> invoices = new ConcurrentHashMap<>();

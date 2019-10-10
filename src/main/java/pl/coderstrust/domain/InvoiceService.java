@@ -1,10 +1,12 @@
 package pl.coderstrust.domain;
 
+import org.springframework.stereotype.Service;
 import pl.coderstrust.persistatnce.InvoiceRepository;
 
 import java.time.LocalDate;
 import java.util.Collection;
 
+@Service
 public class InvoiceService {
 
     private InvoiceRepository database;
