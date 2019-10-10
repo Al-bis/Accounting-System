@@ -21,7 +21,7 @@ import java.util.Collection;
 @RequestMapping("/api")
 public class InvoiceController {
 
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     public InvoiceController(InvoiceService invoiceService) {
         if (invoiceService == null) {
