@@ -8,25 +8,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.NestedServletException;
+import pl.coderstrust.controller.Company;
+import pl.coderstrust.controller.Invoice;
+import pl.coderstrust.controller.InvoiceEntry;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -55,32 +58,28 @@ public class InvoiceControllerIntegrationTest {
 
     @Test
     public void shouldAddInvoicesAndReturnAllInvoicesAndInvoicesInDateRange() throws Exception {
-        pl.coderstrust.controller.Company company1 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("A").taxIdentificationNumber("1").address("a").build();
-        pl.coderstrust.controller.Company company2 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("B").taxIdentificationNumber("2").address("b").build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry1 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+        Company company1 = Company.builder().name("A").taxIdentificationNumber("1")
+            .address("a").build();
+        Company company2 = Company.builder().name("B").taxIdentificationNumber("2").address("b")
+            .build();
+        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().id(1L).title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
-        pl.coderstrust.controller.Invoice invoice1 = new pl.coderstrust.controller.Invoice
-            .InvoiceBuilder().id(1L).date(LocalDate.of(2018, 4, 9))
-            .buyer(company1).seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+        Invoice invoice1 = Invoice.builder().id(1L)
+            .date(LocalDate.of(2018, 4, 9)).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
-        pl.coderstrust.controller.Company company3 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("A2").taxIdentificationNumber("12").address("a2").build();
-        pl.coderstrust.controller.Company company4 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("B2").taxIdentificationNumber("22").address("b2").build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry2 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C2")
+        Company company3 = Company.builder().name("A2").taxIdentificationNumber("12").address("a2")
+            .build();
+        Company company4 = Company.builder().name("B2").taxIdentificationNumber("22").address("b2")
+            .build();
+        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().id(1L).title("C2")
             .value(new BigDecimal("41.05")).vat(pl.coderstrust.controller.Vat.VAT_8)
             .amount(5L).build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry3 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(2L).title("C3")
+        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().id(2L).title("C3")
             .value(new BigDecimal("2.99")).vat(pl.coderstrust.controller.Vat.VAT_5)
             .amount(8L).build();
-        pl.coderstrust.controller.Invoice invoice2 = new pl.coderstrust.controller.Invoice
-            .InvoiceBuilder().date(LocalDate.of(2019, 7, 18))
+        Invoice invoice2 = Invoice.builder().date(LocalDate.of(2019, 7, 18))
             .buyer(company3).seller(company4).entries(Arrays.asList(invoiceEntry2, invoiceEntry3))
             .build();
 
@@ -157,17 +156,16 @@ public class InvoiceControllerIntegrationTest {
 
     @Test
     public void shouldReturnInvoiceBasedOnGivenId() throws Exception {
-        pl.coderstrust.controller.Company company1 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("A").taxIdentificationNumber("1").address("a").build();
-        pl.coderstrust.controller.Company company2 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("B").taxIdentificationNumber("2").address("b").build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry1 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+        Company company1 = Company.builder().name("A").taxIdentificationNumber("1").address("a")
+            .build();
+        Company company2 = Company.builder().name("B").taxIdentificationNumber("2").address("b")
+            .build();
+        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().id(1L).title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
-        pl.coderstrust.controller.Invoice invoice1 = new pl.coderstrust.controller.Invoice
-            .InvoiceBuilder().id(1L).date(LocalDate.of(2018, 4, 9))
-            .buyer(company1).seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
+        Invoice invoice1 = Invoice.builder().id(1L)
+            .date(LocalDate.of(2018, 4, 9)).buyer(company1)
+            .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/invoices")
             .contentType(MediaType.APPLICATION_JSON)
@@ -199,32 +197,29 @@ public class InvoiceControllerIntegrationTest {
 
     @Test
     public void shouldAddAndThenDeleteInvoice() throws Exception {
-        pl.coderstrust.controller.Company company1 = new pl.coderstrust.controller.Company
+        Company company1 = new pl.coderstrust.controller.Company
             .CompanyBuilder().name("A").taxIdentificationNumber("1").address("a").build();
-        pl.coderstrust.controller.Company company2 = new pl.coderstrust.controller.Company
+        Company company2 = new pl.coderstrust.controller.Company
             .CompanyBuilder().name("B").taxIdentificationNumber("2").address("b").build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry1 = new pl.coderstrust.controller
+        InvoiceEntry invoiceEntry1 = new pl.coderstrust.controller
             .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
-        pl.coderstrust.controller.Invoice invoice1 = new pl.coderstrust.controller.Invoice
+        Invoice invoice1 = new pl.coderstrust.controller.Invoice
             .InvoiceBuilder().id(1L).date(LocalDate.of(2018, 4, 9))
             .buyer(company1).seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
-        pl.coderstrust.controller.Company company3 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("A2").taxIdentificationNumber("12").address("a2").build();
-        pl.coderstrust.controller.Company company4 = new pl.coderstrust.controller.Company
-            .CompanyBuilder().name("B2").taxIdentificationNumber("22").address("b2").build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry2 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C2")
+        Company company3 = Company.builder().name("A2").taxIdentificationNumber("12").address("a2")
+            .build();
+        Company company4 = Company.builder().name("B2").taxIdentificationNumber("22").address("b2")
+            .build();
+        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().id(1L).title("C2")
             .value(new BigDecimal("41.05")).vat(pl.coderstrust.controller.Vat.VAT_8)
             .amount(5L).build();
-        pl.coderstrust.controller.InvoiceEntry invoiceEntry3 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(2L).title("C3")
+        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().id(2L).title("C3")
             .value(new BigDecimal("2.99")).vat(pl.coderstrust.controller.Vat.VAT_5)
             .amount(8L).build();
-        pl.coderstrust.controller.Invoice invoice2 = new pl.coderstrust.controller.Invoice
-            .InvoiceBuilder().date(LocalDate.of(2019, 7, 18))
+        Invoice invoice2 = Invoice.builder().date(LocalDate.of(2019, 7, 18))
             .buyer(company3).seller(company4).entries(Arrays.asList(invoiceEntry2, invoiceEntry3))
             .build();
 
