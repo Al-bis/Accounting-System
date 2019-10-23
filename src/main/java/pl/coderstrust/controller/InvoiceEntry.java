@@ -2,11 +2,13 @@ package pl.coderstrust.controller;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+@ApiModel(value = "InvoiceEntry", description = "Invoice entry which is a position on Invoice")
 public final class InvoiceEntry {
 
     private final Long id;

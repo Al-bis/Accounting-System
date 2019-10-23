@@ -2,9 +2,11 @@ package pl.coderstrust.controller;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 
 import java.util.Objects;
 
+@ApiModel(value = "Company", description = "Company which can be a seller or a buyer")
 public final class Company {
 
     private final String name;

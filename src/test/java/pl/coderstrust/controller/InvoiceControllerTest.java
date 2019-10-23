@@ -79,7 +79,7 @@ class InvoiceControllerTest {
         when(service.getAllInvoices(date1, date2)).thenReturn(Arrays.asList(invoice2));
 
         // when
-        ResponseEntity<Collection<Invoice>> invoices = controller.getAllInvoices(date1, date2);
+        ResponseEntity<Collection<Invoice>> invoices = controller.getInvoices(date1, date2);
 
         // then
         assertThat(invoices.getBody()).hasSize(1);

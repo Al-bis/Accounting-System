@@ -2,12 +2,15 @@ package pl.coderstrust.controller;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@ApiModel(value = "Invoice", description = "VAT Invoice with entries")
 public final class Invoice {
 
     private final Long id;
@@ -47,6 +50,7 @@ public final class Invoice {
         return id;
     }
 
+    @ApiModelProperty(value = "Date when invoice was created", example = "2019-02-21")
     public LocalDate getDate() {
         return date;
     }

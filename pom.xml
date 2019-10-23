@@ -54,6 +54,7 @@
                 <exclude>pl/coderstrust/controller/InvoiceEntry.class</exclude>
                 <exclude>pl/coderstrust/controller/Vat.class</exclude>
                 <exclude>pl/coderstrust/Application.class</exclude>
+                <exclude>pl/coderstrust/config/*.class</exclude>
               </excludes>
               <rules>
                 <rule>
@@ -161,6 +162,16 @@
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>2.23.4</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>2.9.2</version>
     </dependency>
   </dependencies>
 
