@@ -3,6 +3,7 @@ package pl.coderstrust.controller;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -54,6 +55,7 @@ public final class InvoiceEntry {
         return vat;
     }
 
+    @ApiModelProperty(value = "Entry amount", example = "1")
     public Long getAmount() {
         return amount;
     }
