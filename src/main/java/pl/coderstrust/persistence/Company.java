@@ -1,13 +1,22 @@
-package pl.coderstrust.domain;
+package pl.coderstrust.persistence;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public final class Company {
 
-    private final Long id;
-    private final String name;
-    private final String taxIdentificationNumber;
-    private final String address;
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String taxIdentificationNumber;
+    private String address;
+
+    private Company() {
+    }
 
     public Company(Long id, String name, String taxIdentificationNumber, String address) {
         this.id = id;

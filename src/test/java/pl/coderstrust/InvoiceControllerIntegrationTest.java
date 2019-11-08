@@ -62,10 +62,10 @@ public class InvoiceControllerIntegrationTest {
             .address("a").build();
         Company company2 = Company.builder().name("B").taxIdentificationNumber("2").address("b")
             .build();
-        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().id(1L).title("C")
+        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
-        Invoice invoice1 = Invoice.builder().id(1L)
+        Invoice invoice1 = Invoice.builder()
             .date(LocalDate.of(2018, 4, 9)).buyer(company1)
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
@@ -73,10 +73,10 @@ public class InvoiceControllerIntegrationTest {
             .build();
         Company company4 = Company.builder().name("B2").taxIdentificationNumber("22").address("b2")
             .build();
-        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().id(1L).title("C2")
+        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().title("C2")
             .value(new BigDecimal("41.05")).vat(pl.coderstrust.controller.Vat.VAT_8)
             .amount(5L).build();
-        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().id(2L).title("C3")
+        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().title("C3")
             .value(new BigDecimal("2.99")).vat(pl.coderstrust.controller.Vat.VAT_5)
             .amount(8L).build();
         Invoice invoice2 = Invoice.builder().date(LocalDate.of(2019, 7, 18))
@@ -92,7 +92,7 @@ public class InvoiceControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(invoice2)))
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("2")));
+            .andExpect(content().string(containsString("5")));
         this.mockMvc.perform(get("/api/invoices"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1))
@@ -105,12 +105,11 @@ public class InvoiceControllerIntegrationTest {
             .andExpect(jsonPath("$[0].buyer.taxIdentificationNumber")
                 .value("1"))
             .andExpect(jsonPath("$[0].buyer.address").value("a"))
-            .andExpect(jsonPath("$[0].entries.[0].id").value(1))
             .andExpect(jsonPath("$[0].entries.[0].title").value("C"))
             .andExpect(jsonPath("$[0].entries.[0].value").value(12.34))
             .andExpect(jsonPath("$[0].entries.[0].vat").value("VAT_23"))
             .andExpect(jsonPath("$[0].entries.[0].amount").value(2))
-            .andExpect(jsonPath("$[1].id").value(2))
+            .andExpect(jsonPath("$[1].id").value(5))
             .andExpect(jsonPath("$[1].date").value("2019-07-18"))
             .andExpect(jsonPath("$[1].seller.name").value("B2"))
             .andExpect(jsonPath("$[1].seller.taxIdentificationNumber")
@@ -120,19 +119,17 @@ public class InvoiceControllerIntegrationTest {
             .andExpect(jsonPath("$[1].buyer.taxIdentificationNumber")
                 .value("12"))
             .andExpect(jsonPath("$[1].buyer.address").value("a2"))
-            .andExpect(jsonPath("$[1].entries.[0].id").value(1))
             .andExpect(jsonPath("$[1].entries.[0].title").value("C2"))
             .andExpect(jsonPath("$[1].entries.[0].value").value(41.05))
             .andExpect(jsonPath("$[1].entries.[0].vat").value("VAT_8"))
             .andExpect(jsonPath("$[1].entries.[0].amount").value(5))
-            .andExpect(jsonPath("$[1].entries.[1].id").value(2))
             .andExpect(jsonPath("$[1].entries.[1].title").value("C3"))
             .andExpect(jsonPath("$[1].entries.[1].value").value(2.99))
             .andExpect(jsonPath("$[1].entries.[1].vat").value("VAT_5"))
             .andExpect(jsonPath("$[1].entries.[1].amount").value(8));
         this.mockMvc.perform(get("/api/invoices/date?from=2019-01-01&to=2019-08-01"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(2))
+            .andExpect(jsonPath("$[0].id").value(5))
             .andExpect(jsonPath("$[0].date").value("2019-07-18"))
             .andExpect(jsonPath("$[0].seller.name").value("B2"))
             .andExpect(jsonPath("$[0].seller.taxIdentificationNumber")
@@ -142,12 +139,10 @@ public class InvoiceControllerIntegrationTest {
             .andExpect(jsonPath("$[0].buyer.taxIdentificationNumber")
                 .value("12"))
             .andExpect(jsonPath("$[0].buyer.address").value("a2"))
-            .andExpect(jsonPath("$[0].entries.[0].id").value(1))
             .andExpect(jsonPath("$[0].entries.[0].title").value("C2"))
             .andExpect(jsonPath("$[0].entries.[0].value").value(41.05))
             .andExpect(jsonPath("$[0].entries.[0].vat").value("VAT_8"))
             .andExpect(jsonPath("$[0].entries.[0].amount").value(5))
-            .andExpect(jsonPath("$[0].entries.[1].id").value(2))
             .andExpect(jsonPath("$[0].entries.[1].title").value("C3"))
             .andExpect(jsonPath("$[0].entries.[1].value").value(2.99))
             .andExpect(jsonPath("$[0].entries.[1].vat").value("VAT_5"))
@@ -160,10 +155,10 @@ public class InvoiceControllerIntegrationTest {
             .build();
         Company company2 = Company.builder().name("B").taxIdentificationNumber("2").address("b")
             .build();
-        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().id(1L).title("C")
+        InvoiceEntry invoiceEntry1 = InvoiceEntry.builder().title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
-        Invoice invoice1 = Invoice.builder().id(1L)
+        Invoice invoice1 = Invoice.builder()
             .date(LocalDate.of(2018, 4, 9)).buyer(company1)
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
@@ -184,7 +179,6 @@ public class InvoiceControllerIntegrationTest {
             .andExpect(jsonPath("$.buyer.taxIdentificationNumber")
                 .value("1"))
             .andExpect(jsonPath("$.buyer.address").value("a"))
-            .andExpect(jsonPath("$.entries.[0].id").value(1))
             .andExpect(jsonPath("$.entries.[0].title").value("C"))
             .andExpect(jsonPath("$.entries.[0].value").value(12.34))
             .andExpect(jsonPath("$.entries.[0].vat").value("VAT_23"))
@@ -202,21 +196,21 @@ public class InvoiceControllerIntegrationTest {
         Company company2 = new pl.coderstrust.controller.Company
             .CompanyBuilder().name("B").taxIdentificationNumber("2").address("b").build();
         InvoiceEntry invoiceEntry1 = new pl.coderstrust.controller
-            .InvoiceEntry.InvoiceEntryBuilder().id(1L).title("C")
+            .InvoiceEntry.InvoiceEntryBuilder().title("C")
             .value(new BigDecimal("12.34")).vat(pl.coderstrust.controller.Vat.VAT_23)
             .amount(2L).build();
         Invoice invoice1 = new pl.coderstrust.controller.Invoice
-            .InvoiceBuilder().id(1L).date(LocalDate.of(2018, 4, 9))
+            .InvoiceBuilder().date(LocalDate.of(2018, 4, 9))
             .buyer(company1).seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
         Company company3 = Company.builder().name("A2").taxIdentificationNumber("12").address("a2")
             .build();
         Company company4 = Company.builder().name("B2").taxIdentificationNumber("22").address("b2")
             .build();
-        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().id(1L).title("C2")
+        InvoiceEntry invoiceEntry2 = InvoiceEntry.builder().title("C2")
             .value(new BigDecimal("41.05")).vat(pl.coderstrust.controller.Vat.VAT_8)
             .amount(5L).build();
-        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().id(2L).title("C3")
+        InvoiceEntry invoiceEntry3 = InvoiceEntry.builder().title("C3")
             .value(new BigDecimal("2.99")).vat(pl.coderstrust.controller.Vat.VAT_5)
             .amount(8L).build();
         Invoice invoice2 = Invoice.builder().date(LocalDate.of(2019, 7, 18))
@@ -232,12 +226,12 @@ public class InvoiceControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(invoice2)))
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("2")));
+            .andExpect(content().string(containsString("5")));
         this.mockMvc.perform(delete("/api/invoices/1"))
             .andExpect(status().isNoContent());
         this.mockMvc.perform(get("/api/invoices"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(2))
+            .andExpect(jsonPath("$[0].id").value(5))
             .andExpect(jsonPath("$[0].date").value("2019-07-18"))
             .andExpect(jsonPath("$[0].seller.name").value("B2"))
             .andExpect(jsonPath("$[0].seller.taxIdentificationNumber")
@@ -247,12 +241,10 @@ public class InvoiceControllerIntegrationTest {
             .andExpect(jsonPath("$[0].buyer.taxIdentificationNumber")
                 .value("12"))
             .andExpect(jsonPath("$[0].buyer.address").value("a2"))
-            .andExpect(jsonPath("$[0].entries.[0].id").value(1))
             .andExpect(jsonPath("$[0].entries.[0].title").value("C2"))
             .andExpect(jsonPath("$[0].entries.[0].value").value(41.05))
             .andExpect(jsonPath("$[0].entries.[0].vat").value("VAT_8"))
             .andExpect(jsonPath("$[0].entries.[0].amount").value(5))
-            .andExpect(jsonPath("$[0].entries.[1].id").value(2))
             .andExpect(jsonPath("$[0].entries.[1].title").value("C3"))
             .andExpect(jsonPath("$[0].entries.[1].value").value(2.99))
             .andExpect(jsonPath("$[0].entries.[1].vat").value("VAT_5"))

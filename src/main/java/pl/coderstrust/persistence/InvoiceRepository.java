@@ -1,6 +1,4 @@
-package pl.coderstrust.persistatnce;
-
-import pl.coderstrust.domain.Invoice;
+package pl.coderstrust.persistence;
 
 import java.time.LocalDate;
 import java.util.Collection;

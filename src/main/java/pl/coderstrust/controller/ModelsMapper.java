@@ -23,6 +23,7 @@ class ModelsMapper {
 
     static Company mapBuyer(pl.coderstrust.domain.Invoice domainInvoice) {
         return new Company.CompanyBuilder()
+            .id(domainInvoice.getBuyer().getId())
             .name(domainInvoice.getBuyer().getName())
             .address(domainInvoice.getBuyer().getAddress())
             .taxIdentificationNumber(domainInvoice.getBuyer().getTaxIdentificationNumber())
@@ -31,6 +32,7 @@ class ModelsMapper {
 
     static Company mapSeller(pl.coderstrust.domain.Invoice domainInvoice) {
         return new Company.CompanyBuilder()
+            .id(domainInvoice.getSeller().getId())
             .name(domainInvoice.getSeller().getName())
             .address(domainInvoice.getSeller().getAddress())
             .taxIdentificationNumber(domainInvoice.getSeller().getTaxIdentificationNumber())
@@ -93,6 +95,7 @@ class ModelsMapper {
     static pl.coderstrust.domain.Company mapBuyerToDomain(Invoice invoice) {
         return new pl.coderstrust.domain.Company
             .CompanyBuilder().name(invoice.getBuyer().getName())
+            .id(invoice.getBuyer().getId())
             .address(invoice.getBuyer().getAddress())
             .taxIdentificationNumber(invoice.getBuyer().getTaxIdentificationNumber()).build();
     }
@@ -100,6 +103,7 @@ class ModelsMapper {
     static pl.coderstrust.domain.Company mapSellerToDomain(Invoice invoice) {
         return new pl.coderstrust.domain.Company
             .CompanyBuilder().name(invoice.getSeller().getName())
+            .id(invoice.getSeller().getId())
             .address(invoice.getSeller().getAddress())
             .taxIdentificationNumber(invoice.getSeller().getTaxIdentificationNumber()).build();
     }

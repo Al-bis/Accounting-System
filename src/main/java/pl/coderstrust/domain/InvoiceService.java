@@ -1,7 +1,7 @@
 package pl.coderstrust.domain;
 
 import org.springframework.stereotype.Service;
-import pl.coderstrust.persistatnce.InvoiceRepository;
+import pl.coderstrust.persistence.InvoiceRepository;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,19 +19,22 @@ public class InvoiceService {
     }
 
     public Collection<Invoice> getAllInvoices() {
-        return database.getAllInvoices();
+        return ModelMapperConverter.modelMapperConverter.convertAll(database.getAllInvoices());
     }
 
     public Collection<Invoice> getAllInvoices(LocalDate fromDate, LocalDate toDate) {
-        return database.getInvoices(fromDate, toDate);
+        return ModelMapperConverter.modelMapperConverter
+            .convertAll(database.getInvoices(fromDate, toDate));
     }
 
     public Long saveInvoice(Invoice invoice) {
-        return database.saveInvoice(invoice);
+        return database
+            .saveInvoice(ModelMapperConverter.modelMapperConverter
+                .convertToPersistatnceInvoice(invoice));
     }
 
     public Invoice getInvoice(Long id) {
-        return database.getInvoice(id);
+        return ModelMapperConverter.modelMapperConverter.convert(database.getInvoice(id));
     }
 
     public void deleteInvoice(Long id) {

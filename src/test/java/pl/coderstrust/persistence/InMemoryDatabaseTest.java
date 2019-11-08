@@ -1,17 +1,14 @@
-package pl.coderstrust.persistatnce;
+package pl.coderstrust.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.coderstrust.domain.Vat.VAT_23;
+import static pl.coderstrust.persistence.Vat.VAT_23;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.domain.Company;
-import pl.coderstrust.domain.Invoice;
-import pl.coderstrust.domain.InvoiceEntry;
 import pl.coderstrust.domain.InvoiceNotFoundException;
 
 import java.math.BigDecimal;
@@ -84,8 +81,10 @@ class InMemoryDatabaseTest {
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
         // when
-        Long invoiceId1 = database.saveInvoice(invoice1);
-        Long invoiceId2 = database.saveInvoice(invoice1);
+        Long invoiceId1 = database
+            .saveInvoice(invoice1);
+        Long invoiceId2 = database
+            .saveInvoice(invoice1);
 
         // then
         assertEquals((Long) 1L, invoiceId1);
@@ -106,7 +105,8 @@ class InMemoryDatabaseTest {
             .seller(company2).entries(Arrays.asList(invoiceEntry1)).build();
 
         // when
-        Long invoiceId = database.saveInvoice(invoice1);
+        Long invoiceId = database
+            .saveInvoice(invoice1);
         Invoice expected = database.getInvoice(1L);
 
         //then
@@ -131,8 +131,8 @@ class InMemoryDatabaseTest {
             .date(LocalDate.of(2018, 4, 9)).buyer(company1).seller(company2)
             .entries(Arrays.asList(invoiceEntry1)).build();
         Invoice invoice2 = new Invoice.InvoiceBuilder().id(2L)
-            .date(LocalDate.of(2019, 1, 28)).buyer(company2).seller(company1)
-            .entries(Arrays.asList(invoiceEntry2)).build();
+            .date(LocalDate.of(2019, 1, 28)).buyer(company2)
+            .seller(company1).entries(Arrays.asList(invoiceEntry2)).build();
         Invoice invoice3 = new Invoice.InvoiceBuilder().id(3L)
             .date(LocalDate.of(2019, 5, 3)).buyer(company1).seller(company2)
             .entries(Arrays.asList(invoiceEntry3)).build();
