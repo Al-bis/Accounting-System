@@ -10,11 +10,11 @@ public interface ModelMapperConverter {
 
     ModelMapperConverter modelMapperConverter = Mappers.getMapper(ModelMapperConverter.class);
 
-    Invoice convert(pl.coderstrust.persistence.Invoice persistatnceInvoice);
+    Invoice convert(pl.coderstrust.persistence.Invoice persistenceInvoice);
 
-    pl.coderstrust.persistence.Invoice convertToPersistatnceInvoice(Invoice invoice);
+    pl.coderstrust.persistence.Invoice convertToPersistenceInvoice(Invoice invoice);
 
     Collection<Invoice> convertAll(
-        Collection<pl.coderstrust.persistence.Invoice> persistatnceInvoices);
+        Collection<pl.coderstrust.persistence.Invoice> persistenceInvoices);
 
 }

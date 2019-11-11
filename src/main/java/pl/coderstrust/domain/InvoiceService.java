@@ -30,7 +30,7 @@ public class InvoiceService {
     public Long saveInvoice(Invoice invoice) {
         return database
             .saveInvoice(ModelMapperConverter.modelMapperConverter
-                .convertToPersistatnceInvoice(invoice));
+                .convertToPersistenceInvoice(invoice));
     }
 
     public Invoice getInvoice(Long id) {
