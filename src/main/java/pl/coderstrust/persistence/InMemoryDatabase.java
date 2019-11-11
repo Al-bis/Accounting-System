@@ -1,7 +1,7 @@
 package pl.coderstrust.persistence;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import pl.coderstrust.domain.InvoiceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
+@ConditionalOnProperty(name = "database", havingValue = "in-memory")
 class InMemoryDatabase implements InvoiceRepository {
 
     private Map<Long, Invoice> invoices = new ConcurrentHashMap<>();
@@ -24,15 +25,7 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Collection<Invoice> getInvoices(LocalDate fromDate, LocalDate toDate) {
-        if (fromDate == null) {
-            throw new IllegalArgumentException("Given fromDate cannot be null");
-        }
-        if (toDate == null) {
-            throw new IllegalArgumentException("Given toDate cannot be null");
-        }
-        if (toDate.compareTo(fromDate) <= -1) {
-            throw new IllegalArgumentException("Given fromDate must be earlier than toDate");
-        }
+        DatabaseValidator.validateDatesIfNullOrInIncorrectOrder(fromDate, toDate);
         Collection<Invoice> invoicesInTimeRange = new ArrayList<>();
         for (Invoice invoice : invoices.values()) {
             if (invoice.getDate().isAfter(fromDate) && invoice.getDate().isBefore(toDate)) {
@@ -44,9 +37,7 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Long saveInvoice(Invoice invoice) {
-        if (invoice == null) {
-            throw new IllegalArgumentException("Given invoice cannot be null");
-        }
+        DatabaseValidator.validateInvoiceIfNull(invoice);
         if (invoice.getId() == null || !invoices.containsKey(invoice.getId())) {
             Long invoiceId = this.invoiceId.incrementAndGet();
             Invoice invoiceCopy = new Invoice(invoiceId, invoice);
@@ -63,17 +54,15 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Invoice getInvoice(Long id) {
-        if (!invoices.containsKey(id)) {
-            throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
-        }
+        boolean idIsNotExistInDatabase = !invoices.containsKey(id);
+        DatabaseValidator.validateInvoiceIdIfNull(id, idIsNotExistInDatabase);
         return invoices.get(id);
     }
 
     @Override
     public void deleteInvoice(Long id) {
-        if (!invoices.containsKey(id)) {
-            throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
-        }
+        boolean idIsNotExistInDatabase = !invoices.containsKey(id);
+        DatabaseValidator.validateInvoiceIdIfNull(id, idIsNotExistInDatabase);
         invoices.remove(id);
     }
 }
