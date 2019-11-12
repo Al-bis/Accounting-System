@@ -1,12 +1,10 @@
 package pl.coderstrust.persistence;
 
-import pl.coderstrust.domain.InvoiceNotFoundException;
-
 import java.time.LocalDate;
 
 class DatabaseValidator {
 
-    static void validateDatesIfNullOrInIncorrectOrder(LocalDate fromDate, LocalDate toDate) {
+    static void checkRangeOfDates(LocalDate fromDate, LocalDate toDate) {
         if (fromDate == null) {
             throw new IllegalArgumentException("Given fromDate cannot be null");
         }
@@ -18,15 +16,9 @@ class DatabaseValidator {
         }
     }
 
-    static void validateInvoiceIfNull(Invoice invoice) {
+    static void checkInvoice(Invoice invoice) {
         if (invoice == null) {
             throw new IllegalArgumentException("Given invoice cannot be null");
-        }
-    }
-
-    static void validateInvoiceIdIfNull(Long id, boolean idIsNotExistInDatabase) {
-        if (idIsNotExistInDatabase) {
-            throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
         }
     }
 

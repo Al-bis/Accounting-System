@@ -2,6 +2,7 @@ package pl.coderstrust.persistence;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import pl.coderstrust.domain.InvoiceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Collection<Invoice> getInvoices(LocalDate fromDate, LocalDate toDate) {
-        DatabaseValidator.validateDatesIfNullOrInIncorrectOrder(fromDate, toDate);
+        DatabaseValidator.checkRangeOfDates(fromDate, toDate);
         Collection<Invoice> invoicesInTimeRange = new ArrayList<>();
         for (Invoice invoice : invoices.values()) {
             if (invoice.getDate().isAfter(fromDate) && invoice.getDate().isBefore(toDate)) {
@@ -37,7 +38,7 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Long saveInvoice(Invoice invoice) {
-        DatabaseValidator.validateInvoiceIfNull(invoice);
+        DatabaseValidator.checkInvoice(invoice);
         if (invoice.getId() == null || !invoices.containsKey(invoice.getId())) {
             Long invoiceId = this.invoiceId.incrementAndGet();
             Invoice invoiceCopy = new Invoice(invoiceId, invoice);
@@ -54,15 +55,17 @@ class InMemoryDatabase implements InvoiceRepository {
 
     @Override
     public Invoice getInvoice(Long id) {
-        boolean idIsNotExistInDatabase = !invoices.containsKey(id);
-        DatabaseValidator.validateInvoiceIdIfNull(id, idIsNotExistInDatabase);
+        if (!invoices.containsKey(id)) {
+            throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
+        }
         return invoices.get(id);
     }
 
     @Override
     public void deleteInvoice(Long id) {
-        boolean idIsNotExistInDatabase = !invoices.containsKey(id);
-        DatabaseValidator.validateInvoiceIdIfNull(id, idIsNotExistInDatabase);
+        if (!invoices.containsKey(id)) {
+            throw new InvoiceNotFoundException("Invoice for id = {" + id + "} is not exists.");
+        }
         invoices.remove(id);
     }
 }
